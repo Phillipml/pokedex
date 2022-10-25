@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar/Navbar";
+import Searchbar from "./components/Searchbar/Searchbar";
+import { searchPokemon } from "./Api";
+import Pokedex from "./components/Pokedex/Pokedex";
 
 function App() {
+  const [pokemon, setPokemon] = useState();
+  const onSearchHandler = async (pokemon) => {
+    const result = await searchPokemon(pokemon);
+    setPokemon(result);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Navbar />
+      <Searchbar onSearch={onSearchHandler} />
+      <div>
+        {pokemon ? (
+          <div>
+            <div>Name: {pokemon.name}</div>
+            <div>Weight: {pokemon.weight}</div>
+            <img src={pokemon.sprites.front_default} alt={pokemon.name} />
+          </div>
+        ) : null}
+      </div>
+      <Pokedex />
     </div>
   );
 }
